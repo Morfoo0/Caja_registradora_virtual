@@ -1,4 +1,4 @@
-import { Calculator } from "@/components/calculator/Calculator";
+import { CashRegister } from "@/components/cashier/CashRegister";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
         <h1 className={styles.title}>Barbie Cashier</h1>
         <p className={styles.subtitle}>Caja registradora</p>
       </header>
-      <Calculator />
+      <CashRegister />
     </main>
   );
 }

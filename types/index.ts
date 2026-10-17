@@ -11,14 +11,18 @@ export interface Category {
 }
 
 export interface Product {
+  /** Identificador estable del producto. */
   id: string;
+  /** Código legible (no es el identificador). */
   sku: string;
   name: string;
   priceCents: Cents;
   categoryId: string;
+  /** Unidad de venta ("pieza", "caja", "hoja", ...). */
+  unit: string;
+  /** Existencias básicas (el inventario avanzado llega en fases posteriores). */
   stock: number;
-  barcode?: string;
-  emoji?: string;
+  /** Disponibilidad: si está `false`, el producto no se vende aunque tenga stock. */
   active: boolean;
 }
 
