@@ -59,7 +59,13 @@ function CartLine({
   );
 }
 
-export function CartPanel({ cart }: { cart: CartState }) {
+export function CartPanel({
+  cart,
+  onCheckout,
+}: {
+  cart: CartState;
+  onCheckout?: () => void;
+}) {
   const { items, subtotalCents, totalCents, count, inc, dec, remove, clear } =
     cart;
 
@@ -99,6 +105,9 @@ export function CartPanel({ cart }: { cart: CartState }) {
               <span>Total</span>
               <span>{formatCents(totalCents)}</span>
             </div>
+            <button type="button" className={styles.payBtn} onClick={onCheckout}>
+              Cobrar
+            </button>
             <button
               type="button"
               className={styles.clearBtn}
