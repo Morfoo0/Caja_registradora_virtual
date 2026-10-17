@@ -82,7 +82,10 @@ export function isSettings(value: unknown): value is Settings {
     typeof value.taxRate === "number" &&
     (value.cashierName === undefined || typeof value.cashierName === "string") &&
     (value.inventoryControl === undefined ||
-      typeof value.inventoryControl === "boolean")
+      typeof value.inventoryControl === "boolean") &&
+    (value.muted === undefined || typeof value.muted === "boolean") &&
+    (value.reduceAnimations === undefined ||
+      typeof value.reduceAnimations === "boolean")
   );
 }
 

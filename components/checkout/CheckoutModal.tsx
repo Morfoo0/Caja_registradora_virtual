@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { changeCents, formatCents, parseToCents } from "@/lib/money";
 import { isSufficientPayment } from "@/features/checkout";
+import { playCardSwipe } from "@/features/audio";
 import { DEFAULT_STORE_NAME } from "@/lib/constants";
 import { Ticket } from "@/components/ticket/Ticket";
 import type { CartItem, Cents } from "@/types";
@@ -14,6 +15,7 @@ interface CheckoutModalProps {
   items: CartItem[];
   totalCents: Cents;
   storeName?: string;
+  onApproved?: () => void;
 }
 
 export function CheckoutModal({
@@ -21,6 +23,7 @@ export function CheckoutModal({
   items,
   totalCents,
   storeName,
+  onApproved,
 }: CheckoutModalProps) {
   const { state } = checkout;
   const [cashText, setCashText] = useState("");
@@ -30,10 +33,11 @@ export function CheckoutModal({
       return;
     }
     const timer = setTimeout(() => {
+      onApproved?.();
       checkout.approveCard(items, totalCents);
     }, 1500);
     return () => clearTimeout(timer);
-  }, [state.status, items, totalCents, checkout]);
+  }, [state.status, items, totalCents, checkout, onApproved]);
 
   if (state.status === "idle") {
     return null;
@@ -74,7 +78,10 @@ export function CheckoutModal({
               <button
                 type="button"
                 className={styles.cardBtn}
-                onClick={() => checkout.start("card")}
+                onClick={() => {
+                  playCardSwipe();
+                  checkout.start("card");
+                }}
               >
                 Tarjeta
               </button>
@@ -126,7 +133,10 @@ export function CheckoutModal({
                 type="button"
                 className={styles.confirmBtn}
                 disabled={!sufficient}
-                onClick={() => checkout.confirmCash(items, totalCents)}
+                onClick={() => {
+                  onApproved?.();
+                  checkout.confirmCash(items, totalCents);
+                }}
               >
                 Confirmar pago
               </button>
@@ -144,7 +154,9 @@ export function CheckoutModal({
         {state.status === "cardProcessing" && (
           <>
             <h2 className={styles.title}>Pago con tarjeta</h2>
-            <div className={styles.spinner} aria-hidden="true" />
+            <div className={styles.cardReader} aria-hidden="true">
+              <div className={styles.card} />
+            </div>
             <p className={styles.processing}>Procesando pago…</p>
             <p className={styles.demo}>
               Simulación demostrativa: no se realiza ningún cobro real ni se

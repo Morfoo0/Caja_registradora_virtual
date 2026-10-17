@@ -1,4 +1,5 @@
 import type { Dispatch } from "react";
+import { playKeyClick } from "@/features/audio";
 import type { CalculatorAction, Digit } from "@/features/calculator";
 import styles from "./Keypad.module.css";
 
@@ -18,7 +19,10 @@ function Key({ label, ariaLabel, tone, wide, onPress }: KeyProps) {
       data-tone={tone}
       data-wide={wide || undefined}
       aria-label={ariaLabel}
-      onClick={onPress}
+      onClick={() => {
+        playKeyClick();
+        onPress();
+      }}
     >
       {label}
     </button>

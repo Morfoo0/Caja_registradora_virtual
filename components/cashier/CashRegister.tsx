@@ -1,35 +1,53 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Catalog } from "@/components/catalog/Catalog";
 import { CartPanel } from "@/components/cart/CartPanel";
 import { Calculator } from "@/components/calculator/Calculator";
 import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import { HistoryModal } from "@/components/history/HistoryModal";
+import { CashDrawer } from "@/components/cashier/CashDrawer";
+import { refreshSales } from "@/components/history/salesStore";
 import { useCart } from "@/components/cart/useCart";
 import { useCheckout } from "@/components/checkout/useCheckout";
-import { useStoredValue } from "@/components/hooks/useStoredValue";
 import { applySaleDeduction } from "@/components/catalog/catalogStore";
 import {
-  DEFAULT_SETTINGS,
-  addSale,
-  browserStorage,
-  loadSettings,
-} from "@/features/persistence";
+  useAppSettings,
+  setMutedPreference,
+  setReduceAnimationsPreference,
+} from "@/components/settings/appSettingsStore";
+import { playAddProduct, playChaChing, setMuted } from "@/features/audio";
+import { addSale, browserStorage } from "@/features/persistence";
+import type { Product } from "@/types";
 import styles from "./CashRegister.module.css";
 
 export function CashRegister() {
   const cart = useCart();
   const checkout = useCheckout();
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const settings = useStoredValue(
-    "settings",
-    () => loadSettings(browserStorage),
-    DEFAULT_SETTINGS,
-  );
+  const settings = useAppSettings();
 
   const { clear, items, totalCents } = cart;
   const status = checkout.state.status;
   const sale = checkout.state.sale;
+
+  useEffect(() => {
+    setMuted(settings.muted === true);
+  }, [settings.muted]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      "reduce-motion",
+      settings.reduceAnimations === true,
+    );
+  }, [settings.reduceAnimations]);
+
+  const handleApproved = useCallback(() => {
+    playChaChing();
+    setDrawerOpen(true);
+  }, []);
 
   useEffect(() => {
     if (status === "approved") {
@@ -37,25 +55,74 @@ export function CashRegister() {
       if (sale) {
         addSale(browserStorage, sale);
         applySaleDeduction(sale, settings.inventoryControl !== false);
+        refreshSales();
       }
     }
   }, [status, clear, sale, settings.inventoryControl]);
 
+  useEffect(() => {
+    if (!drawerOpen) {
+      return;
+    }
+    const timer = setTimeout(() => setDrawerOpen(false), 3000);
+    return () => clearTimeout(timer);
+  }, [drawerOpen]);
+
+  const openHistory = () => {
+    refreshSales();
+    setHistoryOpen(true);
+  };
+
+  const addProduct = (product: Product) => {
+    playAddProduct();
+    cart.add(product);
+  };
+
   return (
     <>
+      <div className={styles.topbar}>
+        <button
+          type="button"
+          className={styles.topbarBtn}
+          onClick={() => setMutedPreference(!settings.muted)}
+        >
+          Sonido: {settings.muted ? "Off" : "On"}
+        </button>
+        <button
+          type="button"
+          className={styles.topbarBtn}
+          onClick={() =>
+            setReduceAnimationsPreference(!settings.reduceAnimations)
+          }
+        >
+          Animaciones: {settings.reduceAnimations ? "Off" : "On"}
+        </button>
+        <button
+          type="button"
+          className={styles.historyBtn}
+          onClick={openHistory}
+        >
+          Historial
+        </button>
+      </div>
+
       <div className={styles.shell}>
-        <Catalog onAdd={cart.add} />
+        <Catalog onAdd={addProduct} />
         <div className={styles.sidebar}>
           <CartPanel cart={cart} onCheckout={checkout.open} />
           <Calculator />
+          <CashDrawer open={drawerOpen} onToggle={() => setDrawerOpen((v) => !v)} />
         </div>
       </div>
+
       <CheckoutModal
         checkout={checkout}
         items={items}
         totalCents={totalCents}
         storeName={settings.storeName}
+        onApproved={handleApproved}
       />
+      <HistoryModal open={historyOpen} onClose={() => setHistoryOpen(false)} />
     </>
   );
 }

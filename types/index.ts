@@ -66,6 +66,10 @@ export interface Settings {
   cashierName?: string;
   /** Si es `false`, las ventas no descuentan existencias. */
   inventoryControl?: boolean;
+  /** Si es `true`, los sonidos están silenciados. */
+  muted?: boolean;
+  /** Si es `true`, se reducen las animaciones. */
+  reduceAnimations?: boolean;
 }
 
 export type StockMovementType = "sale" | "restock" | "adjustment";

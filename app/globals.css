@@ -140,3 +140,9 @@ button {
     display: none !important;
   }
 }
+
+.reduce-motion,
+.reduce-motion * {
+  animation: none !important;
+  transition: none !important;
+}

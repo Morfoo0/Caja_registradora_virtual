@@ -10,6 +10,8 @@ export const DEFAULT_SETTINGS: Settings = {
   currency: "MXN",
   taxRate: 0,
   inventoryControl: true,
+  muted: false,
+  reduceAnimations: false,
 };
 
 /** Carga las preferencias persistidas, o `null` si no hay datos válidos. */
