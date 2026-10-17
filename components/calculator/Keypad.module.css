@@ -1,0 +1,51 @@
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+
+.key {
+  min-height: var(--key-size);
+  border: 2px solid var(--pink-700);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--plum-900);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  box-shadow: var(--shadow-key);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+
+.key:hover {
+  background: var(--pink-100);
+}
+
+.key:active {
+  transform: translateY(2px);
+  box-shadow: var(--shadow-key-pressed);
+}
+
+.key[data-wide] {
+  grid-column: span 2;
+}
+
+.key[data-tone="clear"] {
+  background: var(--yellow);
+  color: var(--plum-900);
+}
+
+.key[data-tone="add"] {
+  background: var(--pink-100);
+  color: var(--pink-900);
+}
+
+.key[data-tone="total"] {
+  background: var(--magenta);
+  color: var(--white);
+  border-color: var(--pink-900);
+  box-shadow: 0 4px 0 var(--pink-900);
+}
+
+.key[data-tone="total"]:active {
+  box-shadow: 0 1px 0 var(--pink-900);
+}

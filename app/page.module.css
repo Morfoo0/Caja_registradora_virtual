@@ -4,24 +4,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 3rem 1.5rem;
+  gap: 1.5rem;
+  padding: 2.5rem 1.5rem;
+}
+
+.header {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .title {
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  color: var(--barbie-pink-dark);
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  color: var(--pink-700);
   letter-spacing: 0.02em;
 }
 
 .subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.35rem);
-  color: var(--foreground-soft);
-}
-
-.note {
-  margin-top: 1rem;
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   color: var(--foreground-soft);
 }

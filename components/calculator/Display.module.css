@@ -1,0 +1,29 @@
+.display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  background: var(--pink-100);
+  border: 3px solid var(--pink-700);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1.25rem;
+}
+
+.label {
+  font-size: var(--text-xs);
+  color: var(--plum-600);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.value {
+  font-size: var(--text-visor);
+  color: var(--plum-900);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  word-break: break-all;
+}
+
+.display[data-totaled] .value {
+  color: var(--magenta);
+}

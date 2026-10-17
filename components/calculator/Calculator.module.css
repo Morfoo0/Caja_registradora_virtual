@@ -1,0 +1,13 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: var(--pink-500);
+  border: 4px solid var(--pink-700);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 0 var(--pink-700), var(--shadow-card);
+}

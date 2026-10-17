@@ -1,49 +1,61 @@
-import type { CartItem } from "@/types";
+import type { Cents } from "@/types";
 
 export const CURRENCY = "MXN" as const;
 export const LOCALE = "es-MX";
-export const DECIMALS = 2;
+export const FRACTION_DIGITS = 2;
+export const CENTS_PER_UNIT = 100;
 
 const formatter = new Intl.NumberFormat(LOCALE, {
   style: "currency",
   currency: CURRENCY,
-  minimumFractionDigits: DECIMALS,
-  maximumFractionDigits: DECIMALS,
+  minimumFractionDigits: FRACTION_DIGITS,
+  maximumFractionDigits: FRACTION_DIGITS,
 });
 
-export function roundMoney(value: number): number {
-  if (!Number.isFinite(value)) {
-    return 0;
+/** Convierte unidades de moneda (flotantes de entrada) a centavos enteros. */
+export function toCents(units: number): Cents {
+  if (!Number.isFinite(units)) {
+    return 0 as Cents;
   }
-  const factor = 10 ** DECIMALS;
-  return Math.round((value + Number.EPSILON) * factor) / factor;
+  return Math.round(units * CENTS_PER_UNIT) as Cents;
 }
 
-export function formatMoney(value: number): string {
-  return formatter.format(roundMoney(value));
+/** Convierte centavos a unidades de moneda (solo para display/parseo). */
+export function fromCents(cents: Cents): number {
+  return cents / CENTS_PER_UNIT;
 }
 
-export function lineTotal(unitPrice: number, quantity: number): number {
-  return roundMoney(unitPrice * quantity);
+/** Formatea centavos como moneda MXN (es-MX). */
+export function formatCents(cents: Cents): string {
+  return formatter.format(fromCents(cents));
 }
 
-export function calculateSubtotal(
-  items: ReadonlyArray<Pick<CartItem, "unitPrice" | "quantity">>,
-): number {
-  return roundMoney(
-    items.reduce(
-      (sum, item) => sum + lineTotal(item.unitPrice, item.quantity),
-      0,
-    ),
+/** Parsea la entrada del usuario ("12.34" | "12,34" | "12") a centavos enteros. */
+export function parseToCents(raw: string): Cents {
+  const normalized = raw.replace(/[^0-9.,]/g, "").replace(",", ".");
+  const value = Number.parseFloat(normalized);
+  return Number.isFinite(value) ? toCents(value) : (0 as Cents);
+}
+
+/** Total de línea: precio unitario en centavos × cantidad entera (exacto). */
+export function lineTotalCents(unitPriceCents: Cents, quantity: number): Cents {
+  return Math.round(unitPriceCents * quantity) as Cents;
+}
+
+export interface PricedLine {
+  unitPriceCents: Cents;
+  quantity: number;
+}
+
+/** Suma de los totales de línea, en centavos enteros. */
+export function subtotalCents(items: ReadonlyArray<PricedLine>): Cents {
+  return items.reduce(
+    (sum, item) => (sum + lineTotalCents(item.unitPriceCents, item.quantity)) as Cents,
+    0 as Cents,
   );
 }
 
-export function calculateChange(amountPaid: number, total: number): number {
-  return roundMoney(amountPaid - total);
-}
-
-export function parseMoneyInput(raw: string): number {
-  const normalized = raw.replace(/[^0-9.,]/g, "").replace(",", ".");
-  const value = Number.parseFloat(normalized);
-  return Number.isFinite(value) ? roundMoney(value) : 0;
+/** Cambio a devolver = importe recibido − total, en centavos enteros. */
+export function changeCents(amountPaidCents: Cents, totalCents: Cents): Cents {
+  return (amountPaidCents - totalCents) as Cents;
 }
