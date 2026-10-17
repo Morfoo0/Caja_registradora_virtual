@@ -1,0 +1,30 @@
+.banner {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--plum-900);
+  color: var(--white);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card);
+  font-size: var(--text-sm);
+  z-index: 100;
+}
+
+.reload {
+  min-height: 36px;
+  padding: 0.4rem 1rem;
+  border: 2px solid var(--white);
+  border-radius: var(--radius-pill);
+  background: var(--pink-500);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.reload:hover {
+  background: var(--pink-700);
+}

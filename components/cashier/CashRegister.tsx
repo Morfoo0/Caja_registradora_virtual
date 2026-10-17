@@ -8,6 +8,8 @@ import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 import { HistoryModal } from "@/components/history/HistoryModal";
 import { CashDrawer } from "@/components/cashier/CashDrawer";
 import { BackupModal } from "@/components/backup/BackupModal";
+import { RegisterMenu } from "@/components/cashier/RegisterMenu";
+import { SettingsModal } from "@/components/settings/SettingsModal";
 import { refreshSales } from "@/components/history/salesStore";
 import { useCart } from "@/components/cart/useCart";
 import { useCheckout } from "@/components/checkout/useCheckout";
@@ -16,6 +18,7 @@ import {
   useAppSettings,
   setMutedPreference,
   setReduceAnimationsPreference,
+  updateSettings,
 } from "@/components/settings/appSettingsStore";
 import { playAddProduct, playChaChing, setMuted } from "@/features/audio";
 import { addSale, browserStorage } from "@/features/persistence";
@@ -28,6 +31,7 @@ export function CashRegister() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [backupOpen, setBackupOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const settings = useAppSettings();
 
@@ -83,36 +87,17 @@ export function CashRegister() {
   return (
     <>
       <div className={styles.topbar}>
-        <button
-          type="button"
-          className={styles.topbarBtn}
-          onClick={() => setMutedPreference(!settings.muted)}
-        >
-          Sonido: {settings.muted ? "Off" : "On"}
-        </button>
-        <button
-          type="button"
-          className={styles.topbarBtn}
-          onClick={() =>
+        <RegisterMenu
+          muted={settings.muted === true}
+          reduceAnimations={settings.reduceAnimations === true}
+          onToggleMuted={() => setMutedPreference(!settings.muted)}
+          onToggleAnimations={() =>
             setReduceAnimationsPreference(!settings.reduceAnimations)
           }
-        >
-          Animaciones: {settings.reduceAnimations ? "Off" : "On"}
-        </button>
-        <button
-          type="button"
-          className={styles.historyBtn}
-          onClick={openHistory}
-        >
-          Historial
-        </button>
-        <button
-          type="button"
-          className={styles.topbarBtn}
-          onClick={() => setBackupOpen(true)}
-        >
-          Respaldo
-        </button>
+          onOpenHistory={openHistory}
+          onOpenBackup={() => setBackupOpen(true)}
+          onOpenSettings={() => setSettingsOpen(true)}
+        />
       </div>
 
       <div className={styles.shell}>
@@ -133,6 +118,13 @@ export function CashRegister() {
       />
       <HistoryModal open={historyOpen} onClose={() => setHistoryOpen(false)} />
       <BackupModal open={backupOpen} onClose={() => setBackupOpen(false)} />
+      {settingsOpen && (
+        <SettingsModal
+          settings={settings}
+          onSave={updateSettings}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
     </>
   );
 }

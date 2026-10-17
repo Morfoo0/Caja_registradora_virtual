@@ -56,6 +56,11 @@ export function setReduceAnimationsPreference(reduceAnimations: boolean): void {
   update({ reduceAnimations });
 }
 
+/** Actualiza cualquier campo de configuración y lo persiste. */
+export function updateSettings(patch: Partial<Settings>): void {
+  update(patch);
+}
+
 /** Recarga la configuración desde el almacenamiento (p. ej. tras restaurar). */
 export function refreshSettings(): void {
   const stored = loadSettings(browserStorage);
