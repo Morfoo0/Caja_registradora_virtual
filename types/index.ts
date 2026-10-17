@@ -64,4 +64,20 @@ export interface Settings {
   currency: Currency;
   taxRate: number;
   cashierName?: string;
+  /** Si es `false`, las ventas no descuentan existencias. */
+  inventoryControl?: boolean;
+}
+
+export type StockMovementType = "sale" | "restock" | "adjustment";
+
+/** Movimiento de inventario trazable (append-only). */
+export interface StockMovement {
+  id: string;
+  productId: string;
+  /** Variación: negativo = salida (venta), positivo = entrada (reposición). */
+  quantity: number;
+  type: StockMovementType;
+  reason: string;
+  saleId?: string;
+  createdAt: string;
 }

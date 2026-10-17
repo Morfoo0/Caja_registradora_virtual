@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { changeCents, formatCents, parseToCents } from "@/lib/money";
 import { isSufficientPayment } from "@/features/checkout";
-import { DEFAULT_STORE_NAME } from "@/features/tickets";
+import { DEFAULT_STORE_NAME } from "@/lib/constants";
 import { Ticket } from "@/components/ticket/Ticket";
 import type { CartItem, Cents } from "@/types";
 import type { CheckoutController } from "./useCheckout";
@@ -13,12 +13,14 @@ interface CheckoutModalProps {
   checkout: CheckoutController;
   items: CartItem[];
   totalCents: Cents;
+  storeName?: string;
 }
 
 export function CheckoutModal({
   checkout,
   items,
   totalCents,
+  storeName,
 }: CheckoutModalProps) {
   const { state } = checkout;
   const [cashText, setCashText] = useState("");
@@ -161,7 +163,10 @@ export function CheckoutModal({
         {state.status === "approved" && state.sale && (
           <>
             <h2 className={`${styles.title} no-print`}>Venta completada</h2>
-            <Ticket sale={state.sale} storeName={DEFAULT_STORE_NAME} />
+            <Ticket
+              sale={state.sale}
+              storeName={storeName ?? DEFAULT_STORE_NAME}
+            />
             <div className={`${styles.actions} no-print`}>
               <button
                 type="button"

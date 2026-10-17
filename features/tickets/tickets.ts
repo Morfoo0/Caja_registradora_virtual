@@ -1,7 +1,6 @@
 import type { Cents, PaymentMethod, Sale } from "@/types";
 
-/** Nombre por defecto de la tienda (se hará configurable vía Settings). */
-export const DEFAULT_STORE_NAME = "Barbie Cashier";
+export { DEFAULT_STORE_NAME } from "@/lib/constants";
 
 export function paymentMethodLabel(method: PaymentMethod): string {
   return method === "cash" ? "Efectivo" : "Tarjeta";

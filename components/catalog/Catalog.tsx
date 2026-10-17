@@ -2,18 +2,35 @@
 
 import { formatCents } from "@/lib/money";
 import { isProductAvailable } from "@/features/catalog";
+import { isLowStock } from "@/features/inventory";
 import type { Product } from "@/types";
 import { useCatalog } from "./useCatalog";
 import styles from "./Catalog.module.css";
 
+function stockLabel(product: Product): string {
+  if (!product.active) {
+    return "No disponible";
+  }
+  if (product.stock === 0) {
+    return "Agotado";
+  }
+  if (isLowStock(product)) {
+    return "Pocas piezas";
+  }
+  return "Disponible";
+}
+
 function ProductCard({
   product,
   onAdd,
+  onRestock,
 }: {
   product: Product;
   onAdd?: (product: Product) => void;
+  onRestock?: (productId: string) => void;
 }) {
   const available = isProductAvailable(product);
+  const low = isLowStock(product);
 
   return (
     <li className={styles.card} data-unavailable={!available || undefined}>
@@ -22,17 +39,32 @@ function ProductCard({
         <span className={styles.name}>{product.name}</span>
         <span className={styles.price}>{formatCents(product.priceCents)}</span>
       </div>
-      <span className={styles.badge} data-available={available || undefined}>
-        {available ? "Disponible" : "No disponible"}
-      </span>
-      <button
-        type="button"
-        className={styles.addBtn}
-        disabled={!available || !onAdd}
-        onClick={() => onAdd?.(product)}
+      <span
+        className={styles.badge}
+        data-available={available || undefined}
+        data-low={low || undefined}
       >
-        Añadir
-      </button>
+        {stockLabel(product)}
+      </span>
+      <span className={styles.stock}>Stock: {product.stock}</span>
+      <div className={styles.actions}>
+        <button
+          type="button"
+          className={styles.addBtn}
+          disabled={!available || !onAdd}
+          onClick={() => onAdd?.(product)}
+        >
+          Añadir
+        </button>
+        <button
+          type="button"
+          className={styles.restockBtn}
+          aria-label={`Reponer stock de ${product.name} (acción administrativa)`}
+          onClick={() => onRestock?.(product.id)}
+        >
+          Reponer +10
+        </button>
+      </div>
     </li>
   );
 }
@@ -49,6 +81,7 @@ export function Catalog({
     setCategoryId,
     categories,
     products,
+    restock,
   } = useCatalog();
 
   return (
@@ -96,7 +129,12 @@ export function Catalog({
       ) : (
         <ul className={styles.grid}>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} onAdd={onAdd} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAdd={onAdd}
+              onRestock={restock}
+            />
           ))}
         </ul>
       )}
