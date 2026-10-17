@@ -52,6 +52,7 @@ function ProductCard({
           type="button"
           className={styles.addBtn}
           disabled={!available || !onAdd}
+          aria-label={`Añadir ${product.name} al carrito`}
           onClick={() => onAdd?.(product)}
         >
           Añadir

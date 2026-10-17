@@ -10,6 +10,7 @@ import {
 } from "@/features/history";
 import { formatTicketDate, paymentMethodLabel } from "@/features/tickets";
 import type { Sale } from "@/types";
+import { useEscapeKey } from "@/components/hooks/useEscapeKey";
 import {
   getSales,
   getServerSales,
@@ -29,6 +30,8 @@ export function HistoryModal({ open, onClose }: HistoryModalProps) {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useEscapeKey(onClose, open);
 
   const sorted = useMemo(() => sortSalesByDate(sales), [sales]);
   const filtered = useMemo(
@@ -183,10 +186,10 @@ function SaleDetail({ sale }: { sale: Sale }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Cant.</th>
-            <th>Producto</th>
-            <th className={styles.num}>P. unit.</th>
-            <th className={styles.num}>Subtotal</th>
+            <th scope="col">Cant.</th>
+            <th scope="col">Producto</th>
+            <th scope="col" className={styles.num}>P. unit.</th>
+            <th scope="col" className={styles.num}>Subtotal</th>
           </tr>
         </thead>
         <tbody>

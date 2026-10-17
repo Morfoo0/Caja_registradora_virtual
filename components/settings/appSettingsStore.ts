@@ -56,6 +56,14 @@ export function setReduceAnimationsPreference(reduceAnimations: boolean): void {
   update({ reduceAnimations });
 }
 
+/** Recarga la configuración desde el almacenamiento (p. ej. tras restaurar). */
+export function refreshSettings(): void {
+  const stored = loadSettings(browserStorage);
+  settings = stored ?? DEFAULT_SETTINGS;
+  hydrated = true;
+  emit();
+}
+
 export function useAppSettings(): Settings {
   return useSyncExternalStore(subscribeSettings, getSettings, getServerSettings);
 }

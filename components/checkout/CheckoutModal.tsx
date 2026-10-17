@@ -6,6 +6,7 @@ import { isSufficientPayment } from "@/features/checkout";
 import { playCardSwipe } from "@/features/audio";
 import { DEFAULT_STORE_NAME } from "@/lib/constants";
 import { Ticket } from "@/components/ticket/Ticket";
+import { useEscapeKey } from "@/components/hooks/useEscapeKey";
 import type { CartItem, Cents } from "@/types";
 import type { CheckoutController } from "./useCheckout";
 import styles from "./CheckoutModal.module.css";
@@ -27,6 +28,8 @@ export function CheckoutModal({
 }: CheckoutModalProps) {
   const { state } = checkout;
   const [cashText, setCashText] = useState("");
+
+  useEscapeKey(checkout.cancel, state.status !== "idle");
 
   useEffect(() => {
     if (state.status !== "cardProcessing") {
@@ -120,7 +123,11 @@ export function CheckoutModal({
             </label>
 
             {receivedCents !== null && !sufficient && (
-              <p className={styles.error}>Importe insuficiente.</p>
+              <p className={styles.error} role="alert">
+                Importe insuficiente: falta{" "}
+                {formatCents(changeCents(totalCents, receivedCents))} para
+                cubrir el total.
+              </p>
             )}
             {changeDue !== null && (
               <p className={styles.change}>

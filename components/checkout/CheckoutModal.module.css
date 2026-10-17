@@ -12,6 +12,8 @@
 .panel {
   width: 100%;
   max-width: 24rem;
+  max-height: 90vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;

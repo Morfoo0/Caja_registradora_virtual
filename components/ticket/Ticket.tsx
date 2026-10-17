@@ -33,10 +33,10 @@ export function Ticket({
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.colQty}>Cant.</th>
-            <th>Producto</th>
-            <th className={styles.colNum}>P. unit.</th>
-            <th className={styles.colNum}>Subtotal</th>
+            <th scope="col" className={styles.colQty}>Cant.</th>
+            <th scope="col">Producto</th>
+            <th scope="col" className={styles.colNum}>P. unit.</th>
+            <th scope="col" className={styles.colNum}>Subtotal</th>
           </tr>
         </thead>
         <tbody>

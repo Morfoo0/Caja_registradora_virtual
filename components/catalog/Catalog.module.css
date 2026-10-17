@@ -37,7 +37,7 @@
 }
 
 .chip {
-  min-height: 36px;
+  min-height: 40px;
   padding: 0.4rem 0.9rem;
   border: 2px solid var(--pink-500);
   border-radius: var(--radius-pill);
@@ -120,11 +120,11 @@
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-pill);
   color: var(--white);
-  background: var(--red);
+  background: #b02f40;
 }
 
 .badge[data-available] {
-  background: var(--green);
+  background: #1e7d3c;
 }
 
 .badge[data-low] {
@@ -145,13 +145,16 @@
 
 .restockBtn {
   flex: 1;
+  min-width: 0;
   min-height: 40px;
+  padding: 0.4rem 0.5rem;
   border: 2px solid var(--pink-500);
   border-radius: var(--radius-md);
   background: var(--white);
   color: var(--pink-700);
   font-weight: 700;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
+  white-space: nowrap;
   transition: background 0.1s ease;
 }
 
@@ -162,6 +165,7 @@
 .addBtn {
   min-height: 40px;
   flex: 1;
+  min-width: 0;
   border: 2px solid var(--pink-700);
   border-radius: var(--radius-md);
   background: var(--pink-500);

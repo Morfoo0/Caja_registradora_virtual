@@ -7,6 +7,7 @@ import { Calculator } from "@/components/calculator/Calculator";
 import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 import { HistoryModal } from "@/components/history/HistoryModal";
 import { CashDrawer } from "@/components/cashier/CashDrawer";
+import { BackupModal } from "@/components/backup/BackupModal";
 import { refreshSales } from "@/components/history/salesStore";
 import { useCart } from "@/components/cart/useCart";
 import { useCheckout } from "@/components/checkout/useCheckout";
@@ -26,6 +27,7 @@ export function CashRegister() {
   const checkout = useCheckout();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [backupOpen, setBackupOpen] = useState(false);
 
   const settings = useAppSettings();
 
@@ -104,6 +106,13 @@ export function CashRegister() {
         >
           Historial
         </button>
+        <button
+          type="button"
+          className={styles.topbarBtn}
+          onClick={() => setBackupOpen(true)}
+        >
+          Respaldo
+        </button>
       </div>
 
       <div className={styles.shell}>
@@ -123,6 +132,7 @@ export function CashRegister() {
         onApproved={handleApproved}
       />
       <HistoryModal open={historyOpen} onClose={() => setHistoryOpen(false)} />
+      <BackupModal open={backupOpen} onClose={() => setBackupOpen(false)} />
     </>
   );
 }

@@ -47,6 +47,14 @@ function setProducts(next: Product[]) {
   emit();
 }
 
+/** Recarga el catálogo desde el almacenamiento (p. ej. tras restaurar). */
+export function refreshCatalog() {
+  const stored = loadCatalog(browserStorage);
+  products = stored ?? DEMO_PRODUCTS;
+  hydrated = true;
+  emit();
+}
+
 /** Acción administrativa de reposición (+10 por defecto). */
 export function restock(productId: string, quantity = 10) {
   const next = restockProduct(browserStorage, productId, quantity);

@@ -18,3 +18,4 @@ export {
   saveMovements,
 } from "./inventoryRepo";
 export type { DeductReason, DeductResult } from "./inventoryRepo";
+export { applyBackup, gatherBackup } from "./backupRepo";
